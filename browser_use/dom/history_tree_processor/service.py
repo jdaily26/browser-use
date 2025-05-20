@@ -92,9 +92,14 @@ class HistoryTreeProcessor:
 		return hashlib.sha256(parent_branch_path_string.encode()).hexdigest()
 
 	@staticmethod
-	def _attributes_hash(attributes: dict[str, str]) -> str:
-		attributes_string = ''.join(f'{key}={value}' for key, value in attributes.items())
-		return hashlib.sha256(attributes_string.encode()).hexdigest()
+        def _attributes_hash(attributes: dict[str, str]) -> str:
+                """Return a stable hash for a dictionary of attributes."""
+                # Sort attributes to ensure deterministic hashes regardless of
+                # insertion order of the dictionary.
+                attributes_string = ''.join(
+                        f'{key}={value}' for key, value in sorted(attributes.items())
+                )
+                return hashlib.sha256(attributes_string.encode()).hexdigest()
 
 	@staticmethod
 	def _xpath_hash(xpath: str) -> str:
